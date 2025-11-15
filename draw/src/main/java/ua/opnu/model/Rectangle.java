@@ -1,22 +1,24 @@
 package ua.opnu.model;
 
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
+import java.awt.Color;
+import java.awt.Graphics;
+
 
 public class Rectangle extends DrawShape {
 
-    public Rectangle() {
+    public Rectangle(int x1, int y1, int x2, int y2, Color color) {
+        super(x1, y1, x2, y2, color);
     }
 
-    public Rectangle(Point startPoint, Point endPoint) {
-        super(startPoint, endPoint);
-    }
-
-    // Для відтворення прямокутника ми використовуємо клас Rectangle2D.Double (клас Double усередині класу Rectangle2D).
-    // Клас Rectangle2D.Double приймає координати типу Double
     @Override
-    public Shape getShape(Point startPoint, Point endPoint) {
-        return new Rectangle2D.Double(Math.min(startPoint.getX(), endPoint.getX()), Math.min(startPoint.getY(), endPoint.getY()),
-                Math.abs(startPoint.getX() - endPoint.getX()), Math.abs(startPoint.getY() - endPoint.getY()));
+    public void draw(Graphics g) {
+        g.setColor(getColor());
+
+        int x = Math.min(getX1(), getX2());
+        int y = Math.min(getY1(), getY2());
+        int width = Math.abs(getX1() - getX2());
+        int height = Math.abs(getY1() - getY2());
+
+        g.drawRect(x, y, width, height);
     }
 }

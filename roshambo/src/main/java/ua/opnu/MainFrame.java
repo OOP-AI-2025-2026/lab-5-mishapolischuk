@@ -8,94 +8,113 @@ import java.util.Random;
 
 public class MainFrame extends JFrame implements ActionListener {
 
-    public MainFrame(String title) throws HeadlessException {
-        super(title);
+    private JButton rockButton, paperButton, scissorsButton;
+    private JLabel statusLabel, playerChoiceLabel, computerChoiceLabel;
+    private Random random = new Random();
 
-        this.setResizable(false);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
+    public MainFrame() {
+        super("Гра: Камінь-Ножиці-Папір");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 200);
+        setLayout(new BorderLayout());
 
-        ((JComponent) getContentPane()).setBorder(
-                BorderFactory.createMatteBorder(10, 10, 10, 10, Color.WHITE));
+        // Панель для кнопок
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
+        rockButton = new JButton("Камінь");
+        paperButton = new JButton("Папір");
+        scissorsButton = new JButton("Ножиці");
 
-        JButton rockButton = new JButton("Камінь");
         rockButton.addActionListener(this);
-        rockButton.setActionCommand("rock");
-        JButton paperButton = new JButton("Папір");
         paperButton.addActionListener(this);
-        paperButton.setActionCommand("paper");
-        JButton scissorsButton = new JButton("Ножиці");
         scissorsButton.addActionListener(this);
-        scissorsButton.setActionCommand("scissors");
 
-        this.add(rockButton);
-        this.add(paperButton);
-        this.add(scissorsButton);
+        buttonPanel.add(rockButton);
+        buttonPanel.add(paperButton);
+        buttonPanel.add(scissorsButton);
 
-        this.pack();
-        this.setVisible(true);
+        // Панель для інформації
+        JPanel infoPanel = new JPanel(new GridLayout(3, 1));
+        playerChoiceLabel = new JLabel("Ваш вибір: ");
+        computerChoiceLabel = new JLabel("Вибір комп'ютера: ");
+        statusLabel = new JLabel("Результат: Зробіть свій хід!", SwingConstants.CENTER);
+        statusLabel.setFont(new Font("Serif", Font.BOLD, 16));
+
+        infoPanel.add(playerChoiceLabel);
+        infoPanel.add(computerChoiceLabel);
+
+        add(buttonPanel, BorderLayout.NORTH);
+        add(infoPanel, BorderLayout.CENTER);
+        add(statusLabel, BorderLayout.SOUTH);
     }
 
-    private GameShape generateShape() {
-
-        // TODO: написати логіку методу
-
-        // Метод повертає об'єкт ігрової фігури (камінь, ножиці чи папір)
-        // випадковим чином
-
-        int random = new Random().nextInt(3);
-
-        return new GameShape(); // TODO: змініть на об'єкт потрібної фігури
-    }
-
-    private int checkWinner(GameShape player, GameShape computer) {
-
-        // Метод отримує клас фігури гравця і комп'ютера за допомогою оператора instanceof
-        // Метод повертає 1 якщо переміг гравець
-        // Метод повертає 0 якщо нічия (обидві фігури однакові)
-        // Метод повертає -1 якщо переміг комп'ютер
-
-        // TODO: написати логіку методу
-
-        return 0;
-    }
-
+    // ЗАВДАННЯ: Дописати логіку цього методу
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Генерується ход комп'ютеру
+        GameShape playerShape = null;
+        Object source = e.getSource();
+
+        // 1. Створюємо об'єкт фігури гравця в залежності від натиснутої кнопки
+        if (source == rockButton) {
+            playerShape = new Rock();
+            playerChoiceLabel.setText("Ваш вибір: Камінь");
+        } else if (source == paperButton) {
+            playerShape = new Paper();
+            playerChoiceLabel.setText("Ваш вибір: Папір");
+        } else if (source == scissorsButton) {
+            playerShape = new Scissors();
+            playerChoiceLabel.setText("Ваш вибір: Ножиці");
+        }
+
+        // 2. Генеруємо фігуру для комп'ютера
         GameShape computerShape = generateShape();
-
-        GameShape playerShape = new GameShape();
-        // Визначаємо, на яку кнопку натиснув гравець
-        switch (e.getActionCommand()) {
-            case "rock":
-                // присвоїти playerShape об'єкт відповідного класу
-                break;
-            case "paper":
-                // присвоїти playerShape об'єкт відповідного класу
-                break;
-            case "scissors":
-                // присвоїти playerShape об'єкт відповідного класу
-                break;
+        if (computerShape instanceof Rock) {
+            computerChoiceLabel.setText("Вибір комп'ютера: Камінь");
+        } else if (computerShape instanceof Paper) {
+            computerChoiceLabel.setText("Вибір комп'ютера: Папір");
+        } else {
+            computerChoiceLabel.setText("Вибір комп'ютера: Ножиці");
         }
 
-        // Визначити результат гри
-        int gameResult = checkWinner(playerShape, computerShape);
+        // 3. Визначаємо переможця
+        int result = checkWinner(playerShape, computerShape);
 
-        // Сформувати повідомлення
-        String message = "Player shape: " + playerShape + ". Computer shape: " + computerShape + ". ";
-        switch (gameResult) {
-            case -1:
-                message += "Computer has won!";
-                break;
+        // 4. Оновлюємо статус гри
+        if (result == 1) {
+            statusLabel.setText("Результат: Ви виграли!");
+        } else if (result == -1) {
+            statusLabel.setText("Результат: Ви програли.");
+        } else {
+            statusLabel.setText("Результат: Нічия!");
+        }
+    }
+
+    // ЗАВДАННЯ: Написати логіку методу, який повертає одну з трьох випадкових фігур
+    private GameShape generateShape() {
+        int choice = random.nextInt(3); // 0, 1 або 2
+        switch (choice) {
             case 0:
-                message += "It's a tie!";
-                break;
+                return new Rock();
             case 1:
-                message += "Player has won!";
+                return new Paper();
+            default: // case 2
+                return new Scissors();
         }
+    }
 
-        // Вивести діалогове вікно з повідомленням
-        JOptionPane.showMessageDialog(null, message);
+    // ЗАВДАННЯ: Реалізувати метод, який визначає переможця
+    private int checkWinner(GameShape player, GameShape computer) {
+        // Використовуємо instanceof для визначення фактичного типу об'єкта
+        if (player instanceof Rock) {
+            if (computer instanceof Scissors) return 1;  // Камінь б'є ножиці
+            if (computer instanceof Paper) return -1; // Папір накриває камінь
+        } else if (player instanceof Paper) {
+            if (computer instanceof Rock) return 1;      // Папір накриває камінь
+            if (computer instanceof Scissors) return -1; // Ножиці ріжуть папір
+        } else if (player instanceof Scissors) {
+            if (computer instanceof Paper) return 1;    // Ножиці ріжуть папір
+            if (computer instanceof Rock) return -1;      // Камінь б'є ножиці
+        }
+        // Якщо жодна з умов не спрацювала, значить фігури однакові
+        return 0; // Нічия
     }
 }

@@ -1,9 +1,5 @@
 package ua.opnu;
 
-public class GameShape {
-
-    @Override
-    public String toString() {
-        return "Game shape";
-    }
+// Базовий абстрактний клас для всіх ігрових фігур
+public abstract class GameShape {
 }
