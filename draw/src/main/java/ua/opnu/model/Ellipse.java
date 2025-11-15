@@ -3,9 +3,11 @@ package ua.opnu.model;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class RoundedRectangle extends DrawShape {
+import static java.awt.Color.getColor;
 
-    public RoundedRectangle(int x1, int y1, int x2, int y2, Color color) {
+public class Ellipse extends DrawShape {
+
+    public Ellipse(int x1, int y1, int x2, int y2, Color color) {
         super(x1, y1, x2, y2, color);
     }
 
@@ -14,11 +16,12 @@ public class RoundedRectangle extends DrawShape {
     public void draw(Graphics g) {
         g.setColor(getColor());
 
+
         int x = Math.min(getX1(), getX2());
         int y = Math.min(getY1(), getY2());
         int width = Math.abs(getX1() - getX2());
         int height = Math.abs(getY1() - getY2());
 
-        g.drawRoundRect(x, y, width, height, 20, 20);
+        g.drawOval(x, y, width, height);
     }
 }

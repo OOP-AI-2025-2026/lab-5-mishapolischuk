@@ -1,57 +1,47 @@
 package ua.opnu.model;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 
-/*
- * Клас "Фігура для малювання".
- * Клас містить початкову та кінцеву точку, а також різні методи
- */
-public class DrawShape {
 
-    public static DrawShape newInstance(int shapeType) {
-        DrawShape shape = null;
-        if (shapeType == DrawShape.SHAPE_RECTANGLE) {
-            shape = new Rectangle();
-        } else if (shapeType == DrawShape.SHAPE_ROUNDED_RECT) {
-            shape = new RoundedRectangle();
-        }
-        return shape;
+public abstract class DrawShape {
+
+
+    private int x1;
+    private int y1;
+    private int x2;
+    private int y2;
+    private Color color;
+
+
+    public DrawShape(int x1, int y1, int x2, int y2, Color color) {
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+        this.color = color;
     }
 
-    // Константи для типів фігур
-    public static final int SHAPE_RECTANGLE = 0;
-    public static final int SHAPE_ROUNDED_RECT = 1;
 
-    // Початкова та кінцева точки
-    private Point startPoint;
-    private Point endPoint;
-
-    // Конструктор без параметрів
-    public DrawShape() {
-        this(new Point(0, 0), new Point(0, 0));
+    public int getX1() {
+        return x1;
     }
 
-    // Конструктор з початковими координатами
-    public DrawShape(Point startPoint, Point endPoint) {
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
+    public int getY1() {
+        return y1;
     }
 
-    // Метод повертає фігуру, яку можна намалювати
-    public Shape getShape() {
-        return this.getShape(startPoint, endPoint);
+    public int getX2() {
+        return x2;
     }
 
-    // Так, як ми не можемо намалювати просто "фігуру", то метод повертає null
-    public Shape getShape(Point startPoint, Point endPoint) {
-        return null;
+    public int getY2() {
+        return y2;
     }
 
-    public void setStartPoint(Point startPoint) {
-        this.startPoint = startPoint;
+    public Color getColor() {
+        return color;
     }
 
-    public void setEndPoint(Point endPoint) {
-        this.endPoint = endPoint;
-    }
+    public abstract void draw(Graphics g);
 }
